@@ -49,4 +49,4 @@
    ```java
    http.apply(new CustomSecurityFilterManager());
    ```
-   4. UPAT로 Authentication 생성해, SecurityContextHolder에 추가
+   4. UsernamePasswordAuthenticationToken로 Authentication 생성해, SecurityContextHolder에 추가
