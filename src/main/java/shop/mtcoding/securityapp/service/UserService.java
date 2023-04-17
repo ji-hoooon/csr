@@ -1,6 +1,7 @@
 package shop.mtcoding.securityapp.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +19,9 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+
+    @Value("${meta.name}")
+    private String secret;
 
     /**
      *  1. 트랜잭션 관리
@@ -38,11 +42,14 @@ public class UserService {
 
     public String 로그인(UserRequest.LoginDTO loginDTO) {
         Optional<User> userOP = userRepository.findByUsername(loginDTO.getUsername());
+        //UserDetailsService에서 하던 로직
         if(userOP.isPresent()){
             User userPS = userOP.get();
+            //passwordEncoder.matches 메서드로 로우 패스워드와 인코딩된 패스워드를 비교 가능
             if(passwordEncoder.matches(loginDTO.getPassword(), userPS.getPassword())){
                 String jwt = MyJwtProvider.create(userPS);
                 return jwt;
+                //String 리턴해서 컨트롤러에서 헤더(Authentication)에 응답해주면 끝
             }
             throw new RuntimeException("패스워드 틀렸어");
         }else{

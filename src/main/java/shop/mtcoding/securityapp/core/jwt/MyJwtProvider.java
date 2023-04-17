@@ -16,6 +16,7 @@ public class MyJwtProvider {
     public static final String TOKEN_PREFIX = "Bearer "; // 스페이스 필요함
     public static final String HEADER = "Authorization";
     private static final String SECRET = System.getenv("HS512_SECRET");
+    //getenv는 OS의 환경변수에서 얻어옴
 
     public static String create(User user) {
         String jwt = JWT.create()

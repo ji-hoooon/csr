@@ -28,7 +28,8 @@ import shop.mtcoding.securityapp.service.UserService;
 
 @Slf4j
 @RequiredArgsConstructor
-@Controller
+//@Controller
+@RestController
 public class HelloController {
 
     private final UserService userService;
@@ -38,6 +39,10 @@ public class HelloController {
     @Value("${meta.name}")
     private String name;
 
+
+    //필터에서 처리하는 것보다 스프링의 각종 기술의 도움을 받을 수 있다.
+    //1. ExceptionHandler
+    //2. 유효성 검사 - @Valid
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserRequest.LoginDTO loginDTO){
         String jwt = userService.로그인(loginDTO);
@@ -58,18 +63,22 @@ public class HelloController {
         return ResponseEntity.ok().body(name);
     }
 
-    @GetMapping("/joinForm")
-    public String joinForm(){
-        return "joinForm";
-    }
+//    @GetMapping("/joinForm")
+//    public String joinForm(){
+//        return "joinForm";
+//    }
+//
+//    @GetMapping("/loginForm")
+//    public String loginForm(){
+//        return "loginForm";
+//    }
 
-    @GetMapping("/loginForm")
-    public String loginForm(){
-        return "loginForm";
-    }
 
+
+    //checkpoint : JSON으로 처리 필요
     @PostMapping("/join")
-    public ResponseEntity<?> join(UserRequest.JoinDTO joinDTO){
+//    public ResponseEntity<?> join(UserRequest.JoinDTO joinDTO){
+    public ResponseEntity<?> join(@RequestBody UserRequest.JoinDTO joinDTO){
         // select 됨
         UserResponse.JoinDto data = userService.회원가입(joinDTO);
         // select 안됨
