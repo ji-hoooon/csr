@@ -31,6 +31,7 @@
 7. JwtVerifiyer에서 getenv
    - 윈도우에서는 HS512_SECRET로 환경변수에서 가져옴
    - 리눅스에서는 echo$HS512_SECRET로 환경변수에서 꺼내쓴다.
+   - 사용하는 쉘과 쉘 프로파일이 일치하는지 여부를 확인해야한다.
    ```yaml
     #스프링의 프로퍼티
     meta:
@@ -38,6 +39,13 @@
     #  name: $HS512.SECRET로도 가능 연산할때 {}사용
     #  OS 환경변수에 직접 접근 가능 파스칼 표기법에 ${}, 언더스코어를 사용
     #  스프링의 '.'을 '_'로 바꿔서 찾아준다. ('_'로 해도 똑같이 가능)
+   ```
+   ```java
+    @Value("${meta.name}")
+    private String secret;
+   ```
+   ```java
+   System.getenv("HS512_SECRET");
    ```
 8. BasicAuthenticationFilter 혹은 UsernamePasswordAuthenticationFilter를 상속한 JwtAuthorizationFilter 클래스 작성
    1. JWT 검증만 해도 되므로 SecurityFilter중 어떤 필터로든 가능
