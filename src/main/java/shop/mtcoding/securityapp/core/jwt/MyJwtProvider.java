@@ -23,6 +23,8 @@ public class MyJwtProvider {
                 .withSubject(SUBJECT)
                 .withExpiresAt(new Date(System.currentTimeMillis() + EXP))
                 .withClaim("id", user.getId())
+                //유저 네임이 없는데 -> 강제로 로그인할 때 (UserDetailsService를 타지 않아) 유저 이름을 못찾으므로 여기서 넣어줘야 찾을 수 있다.
+                .withClaim("username", user.getUsername())
                 .withClaim("role", user.getRole())
                 .sign(Algorithm.HMAC512(SECRET));
         return TOKEN_PREFIX + jwt;

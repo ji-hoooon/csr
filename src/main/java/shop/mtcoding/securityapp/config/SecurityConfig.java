@@ -1,5 +1,6 @@
 package shop.mtcoding.securityapp.config;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,10 +16,13 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import shop.mtcoding.securityapp.core.jwt.JwtAuthorizationFilter;
+import shop.mtcoding.securityapp.model.UserRepository;
 
 @Slf4j
 @Configuration
+@RequiredArgsConstructor
 public class SecurityConfig {
+    private final UserRepository userRepository;
 
 
     @Bean
@@ -28,6 +32,7 @@ public class SecurityConfig {
     //패스워드 암호화 알고리즘 BCrypt-> 60Byte로 단방향 해시 암호화 +솔트
 
     @Bean
+    //인증처리를 위해 빈으로 등록해 둬야한다.
     AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
@@ -37,7 +42,8 @@ public class SecurityConfig {
         @Override
         public void configure(HttpSecurity builder) throws Exception {
             AuthenticationManager authenticationManager = builder.getSharedObject(AuthenticationManager.class);
-            builder.addFilter(new JwtAuthorizationFilter(authenticationManager));
+            builder.addFilter(new JwtAuthorizationFilter(authenticationManager, userRepository));
+//            builder.addFilter(new JwtAuthorizationFilter(authenticationManager));
             //새로운 필터 추가
 
             super.configure(builder);
